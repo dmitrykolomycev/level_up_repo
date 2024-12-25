@@ -5,3 +5,16 @@
 3.	Если меньше: "Вы проиграли".
 4.	При равенстве: "Ничья!".
 """
+import random
+
+user_step = int(input("Введите число от 1 до 6: "))
+print("Вы ввели: " + str(user_step))
+bot_step = random.randint(1, 6)
+print("Компьютер бросил: " + str(bot_step))
+
+if user_step > bot_step:
+    print("Вы победили!!!")
+elif user_step < bot_step:
+    print("Вы проиграли!!!")
+else:
+    print("Ничья!!!")
