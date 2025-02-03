@@ -1,0 +1,38 @@
+class Animal():
+  def  __init__(self, name, species):
+    self.name = name
+    self.species = species
+  def display_info(self):
+      print(f"{self.name} - {self.species} ")
+
+class Mammal(Animal):
+  def __init__(self, name, species):
+    super().__init__(name, species)
+    self.warm_blood = warm_blood
+  def display_info(self):
+    print(f"{self.name} - {self.volume}  {self.warm_blood}")
+class Bird(Animal):
+  def __init__(self, name, species):
+    super().__init__(name, species)
+    self.can_fly = True
+  def display_info(self):
+      print(f"{self.name} - {self.species} - {self.can_fly}")
+
+class Zoo:
+  def __init__(self):
+    self.animals = []
+
+  def add_animal(self, animals):
+    self.animals.append(animals)
+
+  def show_all_animals(self):
+    for animal in self.animals:
+            print(animal.display_info())
+
+cow = Animal("Корова", "травоядное")
+sokol = Bird("Сокол","птицы")
+#zebra  = Mammal()  
+zoo = Zoo()
+zoo.add_animal(cow)
+zoo.add_animal(sokol)
+zoo.show_all_animals()
