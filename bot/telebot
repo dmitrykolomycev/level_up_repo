@@ -1,0 +1,141 @@
+import telebot
+from telebot import types
+import requests
+import random
+
+
+bot = telebot.TeleBot('') 
+
+
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn1 = types.KeyboardButton("Кнопка приветствия🐯")
+    markup.add(btn1)
+    bot.send_message(message.from_user.id, 'Привет, я учебный бот от ученика центра IT образования LevelUp🤩', reply_markup=markup)
+
+@bot.message_handler(content_types=['text'])
+def get_text_messages(message):
+
+    if message.text == "Кнопка приветствия🐯":
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True) #надо прописывать для появления кнопок каждый раз когда нужна кнопка
+        btn1 = types.KeyboardButton("Обо мне")
+        btn2 = types.KeyboardButton("Справочный сервис")
+        btn3 = types.KeyboardButton("Кнопка чила -)")
+
+        markup.add(btn1, btn2, btn3)
+        bot.send_message(message.from_user.id, 'Задайте интересующий вас вопрос❓', reply_markup=markup)
+
+      #раздел обо мне, еще его как нить помечать бы
+    elif message.text == "Обо мне":
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)#надо прописывать для появления кнопок
+        btn4 = types.KeyboardButton("Сслыка на резюме")
+        btn5 = types.KeyboardButton("Информация обо мне")
+        btn_main = types.KeyboardButton("Вернуться на главный")
+        markup.add(btn4, btn5, btn_main) #типа добавляем кнопки для выбора
+        bot.send_message(message.from_user.id, 'Выберите, что вас интересует❓', reply_markup=markup)  #раздел обо мне, еще его как нить помечать бы
+
+    elif message.text == "Сслыка на резюме":
+        bot.send_message(message.from_user.id,
+                         'Вот ваша ссылка на резюме: https://spb.hh.ru/resume/dba6bd30ff081a5da90039ed1f496833783636')
+
+    elif message.text == "Информация обо мне":
+        bot.send_message(message.from_user.id,
+                         'Привет! меня зовут Дмитрий я работаю QA MAnual в фин-техе и изучаю питон, что бы перейти в AQA')
+
+    elif message.text == "Вернуться на главный": #конструкция возврата на гланое меню
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("Обо мне")
+        btn2 = types.KeyboardButton("Справочный сервис")
+        btn3 = types.KeyboardButton("Кнопка чила -)")
+
+        markup.add(btn1, btn2, btn3)
+        bot.send_message(message.from_user.id, 'Добро пожаловать! Задайте интересующий вас вопрос❓',
+                         reply_markup=markup)
+
+# справочный сервис ----------------------------------------------------------------------
+    elif message.text == "Справочный сервис":
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn_excange_rate = types.KeyboardButton("Курс доллар/рубль")
+        btn_excange_rate_euro = types.KeyboardButton("Курс евро/рубль")
+        btn_main = types.KeyboardButton("Вернуться на главный")
+        markup.add(btn_excange_rate, btn_excange_rate_euro, btn_main)
+        bot.send_message(message.from_user.id, 'Выберите, что хотели бы узнать❓', reply_markup=markup)
+
+    elif message.text == "Курс доллар/рубль":
+        response = requests.get("https://open.er-api.com/v6/latest/USD")
+        if response.status_code == 200:
+            data = response.json()
+            response = requests.get("https://open.er-api.com/v6/latest/USD")
+            data = response.json()
+            rub = data['rates']['RUB']
+            bot.send_message(message.from_user.id, f'За доллар дают {rub}  рублей. ')
+        else:
+            bot.send_message(message.from_user.id, 'Бесплатная апиха отвалилась...сорян, может позже.')
+
+    elif message.text == "Курс евро/рубль":
+        response = requests.get("https://open.er-api.com/v6/latest/EUR")
+        if response.status_code == 200:
+            data = response.json()
+            response = requests.get("https://open.er-api.com/v6/latest/EUR")
+            data = response.json()
+            rub = data['rates']['RUB']
+            bot.send_message(message.from_user.id, f'За евро дают {rub}  рублей. ')
+        else:
+            bot.send_message(message.from_user.id, 'Бесплатная апиха отвалилась...сорян, может позже.')
+    elif message.text == "Вернуться на главный": #конструкция возврата на гланое меню
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("Обо мне")
+        btn2 = types.KeyboardButton("Справочный сервис")
+        btn3 = types.KeyboardButton("Кнопка чила -)")
+
+        markup.add(btn1, btn2, btn3)
+        bot.send_message(message.from_user.id, 'Добро пожаловать! Задайте интересующий вас вопрос❓',
+                         reply_markup=markup)
+
+
+  #Раздел про чил----------------------------------------------------
+    elif message.text == "Кнопка чила -)":
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn_chak_joke = types.KeyboardButton('Шутка от Чака Нориса(а может и виртуха)')
+        btn_top_new_rfpl = types.KeyboardButton('Цитаты от JSON(стетхем)')
+        btn_main = types.KeyboardButton("Вернуться на главный")
+        markup.add(btn_chak_joke, btn_top_new_rfpl, btn_main)
+        bot.send_message(message.from_user.id, 'Выберите вариант чила ))', reply_markup=markup)
+
+    elif message.text == 'Шутка от Чака Нориса(а может и виртуха)':
+        response = requests.get("https://api.chucknorris.io/jokes/random")
+        if response.status_code == 200:
+            data = response.json()
+            joke = data['value']
+            bot.send_message(message.from_user.id, f'Шутка от Чака: {joke}')
+        else:
+            bot.send_message(message.from_user.id, 'Шутки про Чака пока недоступны....пу пу пу ....')
+
+    elif message.text == 'Цитаты от JSON(стетхем)':
+        quote = ['Сила – не в бабках. Ведь бабки – уже старые.', 'Из проведённых 64-х боёв у меня 64 победы. Все бои были с тенью',
+                 'Взял нож - режь, взял дошик - ешь', 'Я живу, как карта ляжет. Ты живёшь, как мамка скажет.', 'Никогда не сдавайтесь, идите к своей цели! А если будет сложно – сдавайтесь.',
+                 'Если заблудился в лесу, иди домой.','Запомни: всего одна ошибка – и ты ошибся.', 'Я вообще делаю что хочу. Хочу импланты — звоню врачу.',
+                 'В жизни всегда есть две дороги: одна — первая, а другая — вторая.', 'Мы должны оставаться мыми, а они – оними.', 'Делай, как надо. Как не надо, не делай.',
+                 'Сниму квартиру. Порядок на районе гарантирую.', 'Работа — это не волк. Работа — ворк. А волк — это ходить.', 'Не будьте эгоистами, в первую очередь думайте о себе!',
+                 'Марианскую впадину знаешь? Это я упал.', 'Как говорил мой дед, «Я твой дед».', 'Без подошвы тапочки — это просто тряпочки.', 'Слово - не воробей. Вообще ничто не воробей, кроме самого воробья.',
+                 'Жи-ши пиши от души.', 'Если тебе где-то не рады в рваных носках, то и в целых туда идти не стоит.', 'Работа не волк. Никто не волк. Только волк волк.']
+
+
+        random_quote = random.choice(quote)
+        bot.send_message(message.from_user.id, f'Цитата от Джесона: {random_quote}')
+
+    elif message.text == "Вернуться на главный":   #конструкция возврата на гланое меню
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("Обо мне")
+        btn2 = types.KeyboardButton("Справочный сервис")
+        btn3 = types.KeyboardButton("Кнопка чила -)")
+        markup.add(btn1, btn2, btn3)
+        bot.send_message(message.from_user.id, 'Добро пожаловать! Задайте интересующий вас вопрос❓',
+                         reply_markup=markup)
+
+
+
+
+bot.infinity_polling()
